@@ -14,48 +14,89 @@ A Node.js Text-to-Speech server using the Piper TTS engine. This server provides
 
 ## Prerequisites
 
+- Ubuntu 20.04+ (or other Debian-based Linux distributions)
 - Node.js 16+ 
 - Piper TTS engine installed
 - FFmpeg (optional, for audio format conversion)
 
 ## Installation
 
-1. **Clone and install dependencies:**
+### Quick Start (Ubuntu)
+```bash
+# One-liner for Ubuntu setup
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
+sudo apt-get install -y nodejs build-essential python3-dev libespeak-ng-dev && \
+wget https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_linux_amd64.tar.gz && \
+sudo tar -xzf piper_linux_amd64.tar.gz -C /usr/local/bin --strip-components=1 && \
+sudo chmod +x /usr/local/bin/piper && rm piper_linux_amd64.tar.gz && \
+npm install && npm run install-piper && cp env.example .env
+```
+
+### Detailed Installation
+
+1. **Update system packages:**
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
+
+2. **Install Node.js (if not already installed):**
+   ```bash
+   # Using NodeSource repository for latest version
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   
+   # Verify installation
+   node --version
+   npm --version
+   ```
+
+3. **Install system dependencies:**
+   ```bash
+   sudo apt install -y build-essential python3-dev libespeak-ng-dev
+   ```
+
+4. **Install Piper TTS engine:**
+   
+   **Option A: Using apt (Ubuntu 22.04+):**
+   ```bash
+   sudo apt install piper-tts
+   ```
+   
+   **Option B: Manual installation (recommended for latest version):**
+   ```bash
+   # Download latest Piper release
+   wget https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_linux_amd64.tar.gz
+   
+   # Extract to /usr/local/bin
+   sudo tar -xzf piper_linux_amd64.tar.gz -C /usr/local/bin --strip-components=1
+   
+   # Make executable
+   sudo chmod +x /usr/local/bin/piper
+   
+   # Clean up
+   rm piper_linux_amd64.tar.gz
+   
+   # Verify installation
+   piper --version
+   ```
+
+5. **Clone and install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Install Piper TTS engine:**
-   
-   **Windows:**
-   ```bash
-   winget install piper-tts
-   # Or download from: https://github.com/rhasspy/piper/releases
-   ```
-   
-   **macOS:**
-   ```bash
-   brew install piper-tts
-   ```
-   
-   **Linux:**
-   ```bash
-   sudo apt install piper-tts
-   # Or download from: https://github.com/rhasspy/piper/releases
-   ```
-
-3. **Download TTS models:**
+6. **Download TTS models:**
    ```bash
    npm run install-piper
    ```
 
-4. **Configure environment:**
+7. **Configure environment:**
    ```bash
    cp env.example .env
    # Edit .env with your preferences
    ```
 
-5. **Start the server:**
+8. **Start the server:**
    ```bash
    npm start
    # Or for development: npm run dev
@@ -208,18 +249,42 @@ Edit `scripts/install-piper.js` to add more models or change download URLs.
 
 ### Piper Not Found
 - Ensure Piper is installed and in your PATH
-- Set `PIPER_PATH` in `.env` to the full path
+- Set `PIPER_PATH` in `.env` to the full path (e.g., `/usr/local/bin/piper`)
 - Run `piper --version` to verify installation
+- If using manual installation, ensure the binary is executable: `sudo chmod +x /usr/local/bin/piper`
+
+### Ubuntu-Specific Issues
+
+**Permission Denied Errors:**
+```bash
+# If you get permission errors, ensure proper ownership
+sudo chown -R $USER:$USER /usr/local/bin/piper
+```
+
+**Missing Dependencies:**
+```bash
+# Install additional dependencies if needed
+sudo apt install -y libespeak-ng1 libespeak-ng-dev
+```
+
+**Node.js Version Issues:**
+```bash
+# If you have an old Node.js version, update using NodeSource
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
 
 ### Model Not Found
 - Run `npm run install-piper` to download models
 - Check `models/` directory for `.onnx` and `.onnx.json` files
 - Verify model names in API requests
+- Ensure you have sufficient disk space for model downloads
 
 ### Audio Generation Fails
 - Check Piper logs for errors
 - Verify text length (max 1000 chars by default)
 - Ensure sufficient disk space
+- Check if audio directory has proper permissions: `chmod 755 audio/`
 
 ## License
 

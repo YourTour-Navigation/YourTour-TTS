@@ -1,0 +1,6 @@
+audio/*
+!audio/.gitkeep
+models/*
+!models/.gitkeep
+node_modules/
+.env

@@ -17,6 +17,9 @@ RUN pip install piper-tts --break-system-packages
 # Set working directory
 WORKDIR /app
 
+# Copy package files first
+COPY package*.json ./
+
 # Install npm dependencies
 RUN npm install
 

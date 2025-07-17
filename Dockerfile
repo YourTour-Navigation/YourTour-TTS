@@ -18,9 +18,10 @@ RUN pip install piper-tts --break-system-packages
 WORKDIR /app
 
 # Copy package files first
-COPY . .
-RUN rm -rf node_modules package-lock.json
+COPY ./package*.json ./
 RUN npm i
+
+COPY . .
 
 # Create necessary directories
 RUN mkdir -p models audio
